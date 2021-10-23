@@ -46,7 +46,7 @@ List_ ## KEY ## _ ## VALUE ## _pair append_List_ ## KEY ## _ ## VALUE ## _(int n
     temp_list = va_arg(valst, List_ ## KEY ## _ ## VALUE ## _pair); \
     count++; \
   } \
-  full_list = temp_list; /* reference to the first list, all other lists will be concatenated at their ends */ \
+  full_list = temp_list; /* saving a reference to the first list, all other lists will be concatenated at their ends */ \
   temp_list = last_ ## KEY ## _ ## VALUE ## _(temp_list); \
   for (int i = count; i < numLists; i++) { \
     temp_list->next = va_arg(valst, List_ ## KEY ## _ ## VALUE ## _pair); \
