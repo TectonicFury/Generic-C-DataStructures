@@ -1,3 +1,4 @@
+// todo: add iterative inorder traversal, deletion
 #ifndef BST_H
 #define BST_H
 #include <stdarg.h>
@@ -99,6 +100,7 @@ KEY ## _ ## VALUE ## _pair find_in_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VAL
 } \
 List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root) { \
   /* returns a list of entries inorder */ \
+  /* causes stack overflow for large bsts due to recursive nature */
   if (!root) return NULL; \
   return append_List_ ## KEY ## _ ## VALUE ## _(3, recursive_inorder_ ## KEY ## _ ## VALUE ## _bst(root->left), \
   make_list_ ## KEY ## _ ## VALUE ## _(root->value_type->key, root->value_type->value), \
