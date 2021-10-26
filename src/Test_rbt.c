@@ -59,7 +59,7 @@ int main(int argc, char const *argv[]) {
   size_rbt = size_int_int_rbt(rbt_root);
   printf("rbt size3 = %d\n", size_rbt);
   // frees the memory and sets rbt_root to NULL
-  free_whole_rbt_int_int_(&rbt_root, destruct_int_int_pair); // no leaks
+  free_whole_rbt_int_int_(&rbt_root, destruct_int_int_pair); // no leaks and no heap use after free
   printf("pointer = %p\n", rbt_root);
 
   size_rbt = size_int_int_rbt(rbt_root);
