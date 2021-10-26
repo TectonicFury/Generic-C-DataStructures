@@ -22,7 +22,8 @@ struct List_ ## KEY ## _ ## VALUE ## _pair { \
 \
 List_ ## KEY ## _ ## VALUE ## _pair make_list_ ## KEY ## _ ## VALUE ## _(KEY key, VALUE value){ \
   List_ ## KEY ## _ ## VALUE ## _pair p_list = malloc(sizeof(struct List_ ## KEY ## _ ## VALUE ## _pair)); \
-  /* each list node keeps its own copy of the 'pair' so that when freeing the the List (ie. all the list nodes) we don't have double freeing later on, since the same pair would be shared by the RBT node */\
+  /* each list node keeps its own copy of the 'pair' so that when freeing the the List (ie. all the list nodes) we don't have double freeing */ \
+  /* later on, since the same pair would be shared by the RBT node */ \
   /* so when passing the key and value to create a list node, they also should ideally be not shared if they are non primitive types */ \
   /* if Allaah Wills, maybe in future we will have the opportunity to pass some sort of a copy constructor too */ \
   /* as of now, double freeing is possible since the Key and value would be shared between list node and rbt node */ \
