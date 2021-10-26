@@ -1,4 +1,4 @@
-// todo: add iterative inorder traversal, deletion
+// todo: add iterative versions of functions insert, find, min, max etc
 #ifndef BST_H
 #define BST_H
 #include <stdarg.h>
@@ -62,7 +62,7 @@ struct KEY ## _ ## VALUE ## _bst{ \
   int size; \
 }; \
 \
-KEY ## _ ## VALUE ## _bst make ## _ ## KEY ## _ ## VALUE ## _bst(KEY key, VALUE value, int size) {\
+KEY ## _ ## VALUE ## _bst make_ ## KEY ## _ ## VALUE ## _bst(KEY key, VALUE value, int size) {\
   /* make a bst node */ \
   KEY ## _ ## VALUE ## _bst p_bst = malloc(sizeof(struct KEY ## _ ## VALUE ## _bst)); \
   KEY ## _ ## VALUE ## _pair p_pair = malloc(sizeof(struct KEY ## _ ## VALUE ## _pair)); \
@@ -84,7 +84,7 @@ int size_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst x) { \
   return x->size; \
 } \
 KEY ## _ ## VALUE ## _bst insert_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root, KEY key, VALUE value) { \
-  if (!root) return make ## _ ## KEY ## _ ## VALUE ## _bst(key, value, 1); \
+  if (!root) return make_ ## KEY ## _ ## VALUE ## _bst(key, value, 1); \
   if (IS_LESS ## _(key, root->value_type->key)) {root->left = \
       insert_ ## KEY ## _ ## VALUE ## _bst(root->left, key, value); \
   }\
@@ -115,6 +115,12 @@ KEY ## _ ## VALUE ## _pair min_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE #
   if (!root) return NULL; \
   if (!(root->left)) return root->value_type; \
   return min_ ## KEY ## _ ## VALUE ## _bst(root->left); \
+} \
+KEY ## _ ## VALUE ## _bst min_node_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root) { \
+  /* return minimum bst node, useful in deletion */ \
+  if (!root) return NULL; \
+  if (!(root->left)) return root; \
+  return min_node_ ## KEY ## _ ## VALUE ## _bst(root->left); \
 } \
 KEY ## _ ## VALUE ## _pair max_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root) { \
   /* return maximum key-value pair */ \
@@ -188,5 +194,46 @@ KEY ## _ ## VALUE ## _bst deleteMax_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VA
   root->right = deleteMax_ ## KEY ## _ ## VALUE ## _bst(root->right, destruct); \
   root->size = size_ ## KEY ## _ ## VALUE ## _bst(root->left) + size_ ## KEY ## _ ## VALUE ## _bst(root->right) + 1; \
   return root; \
-  }
+} \
+KEY ## _ ## VALUE ## _bst delete_helper_successor_set_null_min_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root) { \
+  /* useful in the main delete function, doesn't free the memory of successor node */\
+  if (!root) return NULL; \
+  if (!root->left) { \
+    KEY ## _ ## VALUE ## _bst right_child = root->right; \
+    return right_child; \
+  }  \
+  root->left = delete_helper_successor_set_null_min_ ## KEY ## _ ## VALUE ## _bst(root->left); \
+  root->size = size_ ## KEY ## _ ## VALUE ## _bst(root->left) + size_ ## KEY ## _ ## VALUE ## _bst(root->right) + 1; \
+  return root; \
+} \
+KEY ## _ ## VALUE ## _bst delete_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root, KEY key, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (!root) return NULL; \
+  if (IS_LESS ## _(key, root->value_type->key)) { \
+    root->left = delete_ ## KEY ## _ ## VALUE ## _bst(root->left, key, destruct); \
+  } \
+  else if (IS_MORE ## _(key, root->value_type->key)) { \
+    root->right = delete_ ## KEY ## _ ## VALUE ## _bst(root->right, key, destruct); \
+  } \
+  else { \
+    if (!root->right) return root->left; \
+    if (!root->left) return root->right; \
+    KEY ## _ ## VALUE ## _bst t = root; \
+    root = min_node_ ## KEY ## _ ## VALUE ## _bst(t->right); \
+    root->right = delete_helper_successor_set_null_min_ ## KEY ## _ ## VALUE ## _bst(t->right); \
+    root->left = t->left; \
+    destruct(t->value_type); \
+    free(t); \
+  } \
+  root->size = size_ ## KEY ## _ ## VALUE ## _bst(root->left) + size_ ## KEY ## _ ## VALUE ## _bst(root->right) + 1; \
+  return root; \
+} \
+int height_ ## KEY ## _ ## VALUE ## _bst(KEY ## _ ## VALUE ## _bst root) { \
+  /* calculates the height of the BST */ \
+  /* a node with neither a left or right child has height 0 */ \
+  if (!root) return 0; \
+  if (!root->left && !root->right) return 0; \
+  int h_left = height_ ## KEY ## _ ## VALUE ## _bst(root->left); \
+  int h_right = height_ ## KEY ## _ ## VALUE ## _bst(root->right); \
+  return 1 + (h_left > h_right ? h_left : h_right); \
+}
 #endif
