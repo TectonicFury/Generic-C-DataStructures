@@ -1,4 +1,5 @@
 // todo: add iterative versions of functions insert, find, min, max etc
+// memory leaks to lists exists, need to add deallocators
 #ifndef BST_H
 #define BST_H
 #include <stdarg.h>
@@ -34,7 +35,7 @@ List_ ## KEY ## _ ## VALUE ## _pair last_ ## KEY ## _ ## VALUE ## _(List_ ## KEY
   /* otherwise recurse */ \
   return last_ ## KEY ## _ ## VALUE ## _(lst->next); \
 } \
-List_ ## KEY ## _ ## VALUE ## _pair append_List_ ## KEY ## _ ## VALUE ## _(int numLists, ...) { \
+List_ ## KEY ## _ ## VALUE ## _pair append_List_ ## KEY ## _ ## VALUE ## _bst(int numLists, ...) { \
   /* useful for appending sublists in inorder method, uses varargs */ \
   va_list valst; \
   va_start(valst, numLists);\
@@ -106,7 +107,7 @@ List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALUE ## _
   /* returns a list of entries inorder */ \
   /* causes stack overflow for large bsts due to recursive nature */ \
   if (!root) return NULL; \
-  return append_List_ ## KEY ## _ ## VALUE ## _(3, recursive_inorder_ ## KEY ## _ ## VALUE ## _bst(root->left), \
+  return append_List_ ## KEY ## _ ## VALUE ## _bst(3, recursive_inorder_ ## KEY ## _ ## VALUE ## _bst(root->left), \
   make_list_ ## KEY ## _ ## VALUE ## _(root->value_type->key, root->value_type->value), \
   recursive_inorder_ ## KEY ## _ ## VALUE ## _bst(root->right));\
 } \

@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 #include "bst.h"
-
+// need to fix memory leaks
 typedef char *my_string; // can't paste * in macros substitutions if joining
 
 // compare functions
@@ -29,7 +29,7 @@ void destruct_int_int_pair(int_int_pair int_pair) {
   free(int_pair); // basic freeing, no recursive freeing for primitive data members (here ints)
   printf("freed the pair\n");
 }
-
+void destruct_temp(my_string_int_pair p) {}
 int main(int argc, char const *argv[]) {
   int_int_bst bst_root = NULL;
   int j;
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]) {
   // seeding rand
   srand(time(NULL));
 
-  for (size_t i = 0; i < 100000; i++) {
+  for (size_t i = 0; i < 1; i++) {
     j = rand() % 100000;
     // inserting random keys and the values (their squares)
     // you have to put the root on LHS for the effect to take place
@@ -116,6 +116,7 @@ int main(int argc, char const *argv[]) {
   }
 
   // testing delete max
+  // causes heap use after free error. max points to a location which was deleted (using delete_min) and max was not set to NULL
   if (max) { // MAX can be null if bst_root is NULL
     printf("max key = %d, max value = %d\n", max->key, max->value);
   }
@@ -146,10 +147,12 @@ int main(int argc, char const *argv[]) {
   char str1[] = "tom";
   char str2[] = "marvolo";
   char str3[] = "riddle";
+  char str4[] = "ziddle";
 
   new_bst = insert_my_string_int_bst(new_bst, str1, 1);
   new_bst = insert_my_string_int_bst(new_bst, str2, 2);
   new_bst = insert_my_string_int_bst(new_bst, str3, 3);
+  new_bst = insert_my_string_int_bst(new_bst, str4, 4);
   List_my_string_int_pair list2 = recursive_inorder_my_string_int_bst(new_bst);
   int size_new_bst = size_my_string_int_bst(new_bst);
   printf("new size = %d\n", size_new_bst);
@@ -158,5 +161,13 @@ int main(int argc, char const *argv[]) {
     list2 = list2->next;
   }
   printf("height = %d\n", height_my_string_int_bst(new_bst));
+  new_bst = delete_my_string_int_bst(new_bst, "tom", destruct_temp);
+  size_new_bst = size_my_string_int_bst(new_bst);
+  printf("new size = %d\n", size_new_bst);
+  list2 = recursive_inorder_my_string_int_bst(new_bst);
+  for (size_t i = 0; i < size_new_bst; i++) {
+    printf("key = %s, value = %d\n", list2->entry->key, list2->entry->value);
+    list2 = list2->next;
+  }
   return 0;
 }

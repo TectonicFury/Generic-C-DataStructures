@@ -1,3 +1,4 @@
+// need to add delete_max and delete
 #ifndef RBT_H
 #define RBT_H
 #include <stdarg.h>
@@ -21,12 +22,34 @@ struct List_ ## KEY ## _ ## VALUE ## _pair { \
 \
 List_ ## KEY ## _ ## VALUE ## _pair make_list_ ## KEY ## _ ## VALUE ## _(KEY key, VALUE value){ \
   List_ ## KEY ## _ ## VALUE ## _pair p_list = malloc(sizeof(struct List_ ## KEY ## _ ## VALUE ## _pair)); \
+  /* each list node keeps its own copy of the 'pair' so that when freeing the the List (ie. all the list nodes) we don't have double freeing later on, since the same pair would be shared by the RBT node */\
+  /* so when passing the key and value to create a list node, they also should ideally be not shared if they are non primitive types */ \
+  /* if Allaah Wills, maybe in future we will have the opportunity to pass some sort of a copy constructor too */ \
+  /* as of now, double freeing is possible since the Key and value would be shared between list node and rbt node */ \
+  /* another approach is to free the (inorder traversal) list first and then free the RBT, using a kind of a "shallow delete" for the \
+   key and value types in RBT's destruct function, so that it only deletes the pair struct and the rbt node and not the key and value */ \
   KEY ## _ ## VALUE ## _pair p_entry = malloc(sizeof(struct KEY ## _ ## VALUE ## _pair)); \
   p_entry->key = key; \
   p_entry->value = value; \
   p_list->entry = p_entry; \
   p_list->next = NULL; \
   return p_list; \
+} \
+void shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(List_ ## KEY ## _ ## VALUE ## _pair list) { \
+  if (!list) return; \
+  List_ ## KEY ## _ ## VALUE ## _pair temp_list_node = list->next; \
+  /* destruct(list->entry); */ \
+  free(list); \
+  list = temp_list_node; \
+  shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(list); \
+} \
+void deep_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(List_ ## KEY ## _ ## VALUE ## _pair list, void (*destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (!list) return; \
+  List_ ## KEY ## _ ## VALUE ## _pair temp_list_node = list->next; \
+  destruct(list->entry); \
+  free(list); \
+  list = temp_list_node; \
+  deep_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(list, destruct); \
 } \
 \
 List_ ## KEY ## _ ## VALUE ## _pair last_ ## KEY ## _ ## VALUE ## _(List_ ## KEY ## _ ## VALUE ## _pair lst) { \
@@ -36,7 +59,7 @@ List_ ## KEY ## _ ## VALUE ## _pair last_ ## KEY ## _ ## VALUE ## _(List_ ## KEY
   /* otherwise recurse */ \
   return last_ ## KEY ## _ ## VALUE ## _(lst->next); \
 } \
-List_ ## KEY ## _ ## VALUE ## _pair append_List_ ## KEY ## _ ## VALUE ## _(int numLists, ...) { \
+List_ ## KEY ## _ ## VALUE ## _pair append_List_ ## KEY ## _ ## VALUE ## _rbt(int numLists, ...) { \
   /* useful for appending sublists in inorder method, uses varargs */ \
   va_list valst; \
   va_start(valst, numLists);\
@@ -82,11 +105,17 @@ int size_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt x) { \
   if (!x) return 0; \
   return x->size; \
 } \
+KEY ## _ ## VALUE ## _pair find_in_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, KEY key) { \
+ if (!root) return NULL; \
+ if (IS_LESS ## _(key, root->value_type->key)) return find_in_ ## KEY ## _ ## VALUE ## _rbt(root->left, key); \
+ else if (IS_MORE ## _(key, root->value_type->key)) return find_in_ ## KEY ## _ ## VALUE ## _rbt(root->right, key); \
+ else return root->value_type; \
+} \
 int isRed_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt x) { \
   if (!x) return 0; \
   return x->color == RED_COLOR; \
 } \
-KEY ## _ ## VALUE ## _rbt rotate_left(KEY ## _ ## VALUE ## _rbt h) { \
+KEY ## _ ## VALUE ## _rbt rotate_left_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt h) { \
   KEY ## _ ## VALUE ## _rbt x = h->right; \
   h->right = x->left; \
   x->left = h; \
@@ -96,7 +125,7 @@ KEY ## _ ## VALUE ## _rbt rotate_left(KEY ## _ ## VALUE ## _rbt h) { \
   h->size = 1 + size_ ## KEY ## _ ## VALUE ## _rbt(h->left) + size_ ## KEY ## _ ## VALUE ## _rbt(h->right); \
   return x; \
   } \
-KEY ## _ ## VALUE ## _rbt rotate_right(KEY ## _ ## VALUE ## _rbt h) { \
+KEY ## _ ## VALUE ## _rbt rotate_right_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt h) { \
   KEY ## _ ## VALUE ## _rbt x = h->left; \
   h->left = x->right; \
   x->right = h; \
@@ -106,7 +135,7 @@ KEY ## _ ## VALUE ## _rbt rotate_right(KEY ## _ ## VALUE ## _rbt h) { \
   h->size = 1 + size_ ## KEY ## _ ## VALUE ## _rbt(h->left) + size_ ## KEY ## _ ## VALUE ## _rbt(h->right); \
   return x; \
 } \
-void flip_colors(KEY ## _ ## VALUE ## _rbt h) { \
+void flip_colors_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt h) { \
   h->color = RED_COLOR; \
   h->left->color = BLACK_COLOR; \
   h->right->color = BLACK_COLOR; \
@@ -116,9 +145,9 @@ KEY ## _ ## VALUE ## _rbt insert_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ #
   if (IS_LESS ## _(key, root->value_type->key)) root->left = insert_helper_ ## KEY ## _ ## VALUE ## _rbt(root->left, key, value); \
   else if (IS_MORE ## _(key, root->value_type->key)) root->right = insert_helper_ ## KEY ## _ ## VALUE ## _rbt(root->right, key, value); \
   else root->value_type->value = value; \
-  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left)) root = rotate_left(root); \
-  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left->left)) root = rotate_right(root); \
-  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) flip_colors(root); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left)) root = rotate_left_ ## KEY ## _ ## VALUE ## _(root); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left->left)) root = rotate_right_ ## KEY ## _ ## VALUE ## _(root); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) flip_colors_ ## KEY ## _ ## VALUE ## _(root); \
   root->size = 1 + size_ ## KEY ## _ ## VALUE ## _rbt(root->left) + size_ ## KEY ## _ ## VALUE ## _rbt(root->right); \
   return root; \
 } \
@@ -126,6 +155,61 @@ KEY ## _ ## VALUE ## _rbt insert_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE
   root = insert_helper_ ## KEY ## _ ## VALUE ## _rbt(root, key, value); \
   root->color = BLACK_COLOR; \
   return root; \
+} \
+/* deletion procedures in RBTs */ \
+void flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h) { \
+  h->color = !h->color; \
+  h->left->color = !h->left->color; \
+  h->right->color = !h->right->color; \
+} \
+KEY ## _ ## VALUE ## _rbt move_red_left_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h) { \
+  flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(h); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right->left)) { \
+    h->right = rotate_right_ ## KEY ## _ ## VALUE ## _(h->right); \
+    h = rotate_left_ ## KEY ## _ ## VALUE ## _(h); \
+    flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(h); \
+  } \
+  return h; \
+} \
+KEY ## _ ## VALUE ## _rbt balance_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h) { \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right)) h = rotate_left_ ## KEY ## _ ## VALUE ## _(h); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) h = rotate_right_ ## KEY ## _ ## VALUE ## _(h); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right)) flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(h);  \
+  h->size = 1 + size_ ## KEY ## _ ## VALUE ## _rbt(h->left) + size_ ## KEY ## _ ## VALUE ## _rbt(h->right); \
+  return h; \
+ } \
+KEY ## _ ## VALUE ## _rbt delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (!h->left) { \
+    destruct(h->value_type);\
+    free(h); \
+    return NULL; \
+  } \
+  if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) h = move_red_left_ ## KEY ## _ ## VALUE ## _rbt(h); \
+  h->left = delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(h->left, destruct); \
+  return balance_ ## KEY ## _ ## VALUE ## _rbt(h); \
+} \
+KEY ## _ ## VALUE ## _rbt delete_min_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  printf("deleting\n");\
+  if (!root) return NULL;  /* for the case where the tree is empty */ \
+  if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) root->color = RED_COLOR; \
+  root = delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
+  if (root) root->color = BLACK_COLOR; \
+  return root; \
+} \
+List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
+  if (!root) return NULL; \
+  return append_List_ ## KEY ## _ ## VALUE ## _rbt(3, recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(root->left), \
+    make_list_ ## KEY ## _ ## VALUE ## _(root->value_type->key, root->value_type->value), \
+    recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(root->right));\
+} \
+void helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  while(root) { \
+    root = delete_min_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
+  } \
+} \
+void free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt *root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(*root, destruct); \
+  *root = NULL; \
 }
 #else
 #define RedBlackTree(KEY, VALUE, IS_LESS, IS_MORE) int add(int a , int b) {return 0;}
