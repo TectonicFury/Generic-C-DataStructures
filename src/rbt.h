@@ -114,6 +114,19 @@ KEY ## _ ## VALUE ## _pair find_in_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VAL
  else if (IS_MORE ## _(key, root->value_type->key)) return find_in_ ## KEY ## _ ## VALUE ## _rbt(root->right, key); \
  else return root->value_type; \
 } \
+/* min is identical to min for vanilla BST */ \
+KEY ## _ ## VALUE ## _pair min_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
+  /* return minimum key-value pair */ \
+  if (!root) return NULL; \
+  if (!(root->left)) return root->value_type; \
+  return min_ ## KEY ## _ ## VALUE ## _rbt(root->left); \
+} \
+KEY ## _ ## VALUE ## _pair max_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
+  /* return maximum key-value pair */ \
+  if (!root) return NULL; \
+  if (!(root->right)) return root->value_type; \
+  return max_ ## KEY ## _ ## VALUE ## _rbt(root->right); \
+} \
 int isRed_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt x) { \
   if (!x) return 0; \
   return x->color == RED_COLOR; \
@@ -160,6 +173,7 @@ KEY ## _ ## VALUE ## _rbt insert_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE
   return root; \
 } \
 /* deletion procedures in RBTs */ \
+/* sedgewick used 'h' as the node parameter */ \
 void flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h) { \
   h->color = !h->color; \
   h->left->color = !h->left->color; \
@@ -174,6 +188,14 @@ KEY ## _ ## VALUE ## _rbt move_red_left_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ #
   } \
   return h; \
 } \
+KEY ## _ ## VALUE ## _rbt move_red_right_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h) { \
+  flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(h); \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) { \
+    h = rotate_right_ ## KEY ## _ ## VALUE ## _(h);\
+    flip_colors_gen_ ## KEY ## _ ## VALUE ## _rbt(h); \
+  }\
+  return h; \
+  } \
 KEY ## _ ## VALUE ## _rbt balance_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h) { \
   if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right)) h = rotate_left_ ## KEY ## _ ## VALUE ## _(h); \
   if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) h = rotate_right_ ## KEY ## _ ## VALUE ## _(h); \
@@ -192,14 +214,31 @@ KEY ## _ ## VALUE ## _rbt delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ##
   return balance_ ## KEY ## _ ## VALUE ## _rbt(h); \
 } \
 KEY ## _ ## VALUE ## _rbt delete_min_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
-  printf("deleting\n");\
   if (!root) return NULL;  /* for the case where the tree is empty */ \
+  /* below line is in the book (algs 4) but absent from sedgewick paper https://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf */ \
   if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) root->color = RED_COLOR; \
   root = delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
   if (root) root->color = BLACK_COLOR; \
   return root; \
 } \
-List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
+KEY ## _ ## VALUE ## _rbt delete_max_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left))  h = rotate_right_ ## KEY ## _ ## VALUE ## _(h);\
+  if (h->right == NULL) { \
+    destruct(h->value_type); \
+    free(h); \
+    return NULL; \
+  } \
+  if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right->left)) h = move_red_right_ ## KEY ## _ ## VALUE ## _rbt(h); \
+  h->right = delete_max_helper_ ## KEY ## _ ## VALUE ## _rbt(h->right, destruct); \
+  return balance_ ## KEY ## _ ## VALUE ## _rbt(h); \
+} \
+KEY ## _ ## VALUE ## _rbt delete_max_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) root->color = RED_COLOR; \
+  root = delete_max_helper_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
+  if (root) root->color = BLACK_COLOR; \
+  return root; \
+} \
+const List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
   if (!root) return NULL; \
   return append_List_ ## KEY ## _ ## VALUE ## _rbt(3, recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(root->left), \
     make_list_ ## KEY ## _ ## VALUE ## _(root->value_type->key, root->value_type->value), \
@@ -207,6 +246,7 @@ List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALUE ## _
 } \
 void helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
   while(root) { \
+    /* maybe this can be improved */ \
     root = delete_min_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
   } \
 } \
