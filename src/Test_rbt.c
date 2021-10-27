@@ -61,6 +61,9 @@ int main(int argc, char const *argv[]) {
   assert(size_rbt2 == size_rbt1 - 1);
   printf("   : Maximum key-value after deletion: key = %d, value = %d\n", max_rbt->key, max_rbt->value);
 
+  rbt_root = insert_int_int_rbt(rbt_root, 500, 27000);
+  rbt_root = delete_int_int_rbt(rbt_root, 500, destruct_int_int_pair);
+
   List_int_int_pair list0 = recursive_inorder_int_int_rbt(rbt_root);
   List_int_int_pair list0_ref = list0; // save a reference to list head in order to free it later
   // printing inorder
@@ -71,7 +74,7 @@ int main(int argc, char const *argv[]) {
     list0 = list0->next; // memory leak if you try to free the list using list0, use list0_ref to free
   }
 
-  
+
   //
   // /* testing address sanitizer in homebrew LLVM clang using
   // clang -c Test_rbt.c -Wall -g -std=c11 -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer

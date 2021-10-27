@@ -121,6 +121,12 @@ KEY ## _ ## VALUE ## _pair min_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE #
   if (!(root->left)) return root->value_type; \
   return min_ ## KEY ## _ ## VALUE ## _rbt(root->left); \
 } \
+KEY ## _ ## VALUE ## _rbt min_node_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
+  /* return minimum rbt node, useful in deletion */ \
+  if (!root) return NULL; \
+  if (!(root->left)) return root; \
+  return min_node_ ## KEY ## _ ## VALUE ## _rbt(root->left); \
+} \
 KEY ## _ ## VALUE ## _pair max_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root) { \
   /* return maximum key-value pair */ \
   if (!root) return NULL; \
@@ -235,6 +241,39 @@ KEY ## _ ## VALUE ## _rbt delete_max_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ##
 KEY ## _ ## VALUE ## _rbt delete_max_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
   if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) root->color = RED_COLOR; \
   root = delete_max_helper_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
+  if (root) root->color = BLACK_COLOR; \
+  return root; \
+} \
+KEY ## _ ## VALUE ## _rbt delete_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h, KEY key, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (IS_LESS ## _(key, h->value_type->key)) { \
+    if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) h = move_red_left_ ## KEY ## _ ## VALUE ## _rbt(h); \
+    h->left = delete_helper_ ## KEY ## _ ## VALUE ## _rbt(h->left, key, destruct); \
+  } \
+  else {\
+    if (isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left)) h = rotate_right_ ## KEY ## _ ## VALUE ## _(h); \
+    int is_l = IS_LESS ## _(key, h->value_type->key); \
+    int is_m = IS_MORE ## _(key, h->value_type->key); \
+    if (!is_l && !is_m && !h->right) { \
+      destruct(h->value_type);\
+      free(h); \
+      return NULL; \
+      } \
+    if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(h->right->left)) h = move_red_right_ ## KEY ## _ ## VALUE ## _rbt(h); \
+    \
+    is_l = IS_LESS ## _(key, h->value_type->key); \
+    is_m = IS_MORE ## _(key, h->value_type->key); \
+    if (!is_l && !is_m) { \
+      KEY ## _ ## VALUE ## _rbt x = min_node_ ## KEY ## _ ## VALUE ## _rbt(h->right); \
+      h->value_type->key = x->value_type->key; \
+      h->value_type->value = x->value_type->value; \
+      h->right = delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(h->right, destruct); \
+    } else h->right = delete_helper_ ## KEY ## _ ## VALUE ## _rbt(h->right, key, destruct); \
+  } \
+  return balance_ ## KEY ## _ ## VALUE ## _rbt(h); \
+} \
+KEY ## _ ## VALUE ## _rbt delete_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, KEY key, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
+  if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(root->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(root->right)) root->color = RED_COLOR; \
+  root = delete_helper_ ## KEY ## _ ## VALUE ## _rbt(root, key, destruct); \
   if (root) root->color = BLACK_COLOR; \
   return root; \
 } \
