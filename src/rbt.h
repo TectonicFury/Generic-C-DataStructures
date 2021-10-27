@@ -1,4 +1,4 @@
-// need to add delete_max and delete
+// based on sedgewick's paper
 #ifndef RBT_H
 #define RBT_H
 #include <stdarg.h>
