@@ -33,8 +33,8 @@ The above macro initialisation defines the following types:
  Type | Description
  ---- | -----------
  int_int_rbt | the main RBT node struct (pasting **KEY** = int and **VALUE** = int in **KEY** ## **_** ## **VALUE** ## **_rbt**)
- int_int_pair | the underlying 'value_type' struct inside an RBT node which holds the Key and Value pair (pasting **KEY** = int and **VALUE** = int in **KEY** ## **_** ## **VALUE** ## **_pair**)
- List_int_int_pair |  a list type for iterating inorder over the elements of the tree (pasting **KEY** = int and **VALUE** = int in **List_** ## **KEY** ## **_** ## **VALUE** ## **_pair**)
+ int_int_pair | the underlying 'value_type' struct inside an RBT node which holds the Key and Value pair
+ List_int_int_pair |  a list type for iterating inorder over the elements of the tree 
 
   The following functions are also initialised:
   Function | Description
