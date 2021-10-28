@@ -14,7 +14,7 @@ int less_int_(int a, int b) {
   if (a < b) return 1;
   return 0;
 }
-// an _ at the end of comparison function
+
 int more_int_(int a, int b) {
   if (a > b) return 1;
   return 0;
