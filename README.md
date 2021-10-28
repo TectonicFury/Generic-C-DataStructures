@@ -22,7 +22,7 @@ int more_int_(int a, int b) {
   return 0;
 }
 
-// when passing the name of the comparison function, remove the trailing underscores.
+// when passing the name of the comparison function, omit the trailing underscore.
 // the "less" function name (minus the trailing underscore) goes first
 
 RedBlackTree(int, int, less_int, more_int) // macro initialisation
