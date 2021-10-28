@@ -3,7 +3,7 @@
 The data structures in this repository are a C port of Sedgewick's recursive implementations in Java.
 Currently, it has support for (unbalanced) BSTs and Red-Black BSTs. To make use of a data structure, include the appropriate header file and initialise it by passing relevant arguments for types and comparison functions.
 
-As an example, here is what a macro initialisation for Red-Black tree having int as both key and value type looks like (pay attention to the naming convention for the comparison functions):
+As an example, here is what a macro initialisation for Red-Black tree having **int** as both key and value type looks like (pay attention to the naming convention for the comparison functions):
 
 ```C
 #include <stdio.h>
@@ -32,7 +32,7 @@ RedBlackTree(int, int, less_int, more_int) // macro initialisation
 The above macro initialisation defines the following types:
  Type | Description
  ---- | -----------
- int_int_rbt | the main RBT node struct (by pasting KEY = int and VALUE = int in KEY ## _ ## VALUE ## _rbt)
+ int_int_rbt | the main RBT node struct (by pasting **KEY** = int and **VALUE** = int in **KEY** ## _ ## **VALUE** ## _rbt)
  int_int_pair | the underlying 'value_type' struct inside an RBT node which holds the Key and Value pair
  List_int_int_pair |  a list type for iterating inorder over the elements of the tree (using list->next pointers)
 
