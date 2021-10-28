@@ -43,15 +43,15 @@ The above macro initialisation defines the following types:
   min_int_int_rbt(int_int_rbt) | Returns the key-value pair with the smallest key in the tree (or subtree). Return type is **int_int_pair**
   max_int_int_rbt(int_int_rbt) | Returns the key-value pair with greatest key in tree (or subtree). Return type is **int_int_pair**
   recursive_inorder_int_int_rbt(int_int_rbt) | Returns an inorder list of elements in the tree. Return type is **List_int_int_pair**
-  delete_min_int_int_rbt(int_int_rbt, void (\*destruct) (int, int)) | Deletes the minimum taking the root as argument. Return type is **int_int_rbt**
-  delete_max_int_int_rbt(int_int_rbt, void (\*destruct) (int, int)) | deletes the maximum taking the root as argument. Return type is **int_int_rbt**
+  delete_min_int_int_rbt(int_int_rbt, void (\*destruct) (int, int)) | Deletes the minimum taking the root and destruct function pointer as argument. Return type is **int_int_rbt**
+  delete_max_int_int_rbt(int_int_rbt, void (\*destruct) (int, int)) | deletes the maximum taking the root and destruct function pointer as argument. Return type is **int_int_rbt**
   delete_int_int_rbt(int_int_rbt, int, void (*destruct) (int, int)) | Takes the *key* to delete in addition to the root and destruct function pointer. Return type is **int_int_rbt**
 
 For the delete functions, you need a *destruct* function appropriate for your key and value types to ensure that there are no memory leaks. For freeing a *value_type* of type int_int_pair, you would have a destruct function like so:
 
 ```C
 void destruct_int_int_pair(int_int_pair int_pair) {
-  
+
   // call appropriate destructors for your key and value here
 
   // then free the value_type pair   
