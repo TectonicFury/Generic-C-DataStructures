@@ -1,2 +1,2 @@
-# C_Algorithms_DataStructures
-Generic Data Structures (and possibly Algorithms too in future) in C using macros
+# C_DataStructures
+### Generic Data Structures in C using macros
