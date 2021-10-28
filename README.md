@@ -1,5 +1,5 @@
 # Generic Data Structures in C (using macros)
-The data structures in this repository are a C port of Sedgewick's recursive implementations in Java. Currently, it has support for (unbalanced) BSTs and Red-Black BSTs. To make use of a data structure, include the appropriate header file and initialise it by passing required arguments for types and comparison functions.
+The data structures in this repository are a C port of Sedgewick's recursive implementations in Java. Currently, it has support for (unbalanced) BSTs and Red-Black BSTs. To make use of a data structure, simply include the appropriate header file and initialise it by passing required arguments for types and comparison functions.
 
 As an example, here is what a macro initialisation for Red-Black tree having **int** as both key and value type looks like (pay attention to the naming convention for the comparison functions):
 
@@ -68,6 +68,7 @@ RedBlackTree(my_string, int, some_less, some_more)
 ### Sample program
 
 ```C
+// sample_rbt.c
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -138,3 +139,5 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 ```
+### Compiling
+`clang -o sample_rbt sample_rbt.c -std=c11`
