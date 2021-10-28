@@ -60,7 +60,7 @@ void destruct_int_int_pair(int_int_pair int_pair) {
   }
 }
 ```
-If the types have a '*' in them, `typedef` them to remove any *. eg. if key is `char\*`, then do:
+If the types have a '*' in them, `typedef` them to remove any *. eg. if key is `char*`, then do:
 ```C
 typedef char *my_string;
 RedBlackTree(my_string, int, some_less, some_more)
