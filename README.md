@@ -1,5 +1,4 @@
-# C_DataStructures
-### Generic Data Structures in C using macros
+# Generic Data Structures in C using macros
 The data structures in this repository are a C port of Sedgewick's recursive implementations in Java.
 Currently, it has support for (unbalanced) BSTs and Red-Black BSTs. To make use of a data structure, include the appropriate header file and initialise it by passing relevant arguments for types and comparison functions.
 
@@ -34,7 +33,7 @@ The above macro initialisation defines the following types:
  ---- | -----------
  int_int_rbt | the main RBT node struct (pasting **KEY** = int and **VALUE** = int in **KEY** ## **_** ## **VALUE** ## **_rbt**)
  int_int_pair | the underlying 'value_type' struct inside an RBT node which holds the Key and Value pair
- List_int_int_pair |  a list type for iterating inorder over the elements of the tree 
+ List_int_int_pair |  a list type for iterating inorder over the elements of the tree
 
   The following functions are also initialised:
   Function | Description
