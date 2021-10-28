@@ -5,7 +5,7 @@ Currently, it has support for (unbalanced) BSTs and Red-Black BSTs. To make use 
 
 As an example, here is what a macro initialisation for Red-Black tree having ints as keys and values looks like (pay attention to the naming convention for the comparison functions):
 
-```
+```C
 #include <stdio.h>
 #include "rbt.h" // for instantiating red-black trees
 
