@@ -44,7 +44,7 @@ The above macro initialisation defines the following types:
   delete_min_int_int_rbt(int_int_rbt, void (\*destruct) (int, int)) | Deletes the minimum taking the root and *destruct function pointer* as argument. Return type is **int_int_rbt**
   delete_max_int_int_rbt(int_int_rbt, void (\*destruct) (int, int)) | deletes the maximum taking the root and *destruct function pointer* as argument. Return type is **int_int_rbt**
   delete_int_int_rbt(int_int_rbt, int, void (*destruct) (int, int)) | Takes the *key* to delete in addition to the root and *destruct function pointer*. Return type is **int_int_rbt**
-  deep_destroy_List_int_int_rbt(List_int_int_pair) | Free memory used for inorder traversal
+  deep_destroy_List_int_int_rbt(List_int_int_pair) | Frees memory used for inorder traversal
   free_whole_rbt_int_int_(int_int_rbt) | Cleans up the RBT
 
 For the delete functions, you need a *destruct* function appropriate for your key and value types to ensure that there are no memory leaks. For freeing a *value_type* of type int_int_pair, you would have a destruct function like so:
