@@ -2,6 +2,7 @@
 #ifndef RBT_H
 #define RBT_H
 #include <stdarg.h>
+#include <stdlib.h>
 #ifndef BST_H
 #define RED_COLOR 1
 #define BLACK_COLOR 0
