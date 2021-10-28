@@ -3,7 +3,7 @@
 The data structures in this repository are a C port of Sedgewick's recursive implementations in Java.
 Currently, it has support for (unbalanced) BSTs and Red-Black BSTs. To make use of a data structure, include the appropriate header file and initialise it by passing relevant arguments for types and comparison functions.
 
-As an example, here is what a macro initialisation for Red-Black tree having ints as keys and values looks like (pay attention to the naming convention for the comparison functions):
+As an example, here is what a macro initialisation for Red-Black tree having int as both key and value type looks like (pay attention to the naming convention for the comparison functions):
 
 ```C
 #include <stdio.h>
