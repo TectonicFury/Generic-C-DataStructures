@@ -51,9 +51,10 @@ For the delete functions, you need a *destruct* function appropriate for your ke
 
 ```C
 void destruct_int_int_pair(int_int_pair int_pair) {
-  // basic freeing, no recursive freeing for primitive data members (here ints)
-  if (int_pair) {
-    // if already freed, we don't want to double free
+  // call appropriate destructors for your key and value here
+
+  // then free the value_type pair   
+  if (int_pair) { // if already freed, we don't want to double free
     free(int_pair);
   }
 }
