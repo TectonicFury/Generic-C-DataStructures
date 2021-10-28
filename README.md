@@ -51,6 +51,7 @@ For the delete functions, you need a *destruct* function appropriate for your ke
 
 ```C
 void destruct_int_int_pair(int_int_pair int_pair) {
+  
   // call appropriate destructors for your key and value here
 
   // then free the value_type pair   
