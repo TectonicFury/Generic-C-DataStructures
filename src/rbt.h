@@ -214,18 +214,14 @@ KEY ## _ ## VALUE ## _rbt balance_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALU
 KEY ## _ ## VALUE ## _rbt delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
   if (!h->left) { \
     if (h->value_type) { \
-      printf("hi in\n"); \
       destruct(h->value_type);\
-      printf("hi out\n"); \
     } \
     \
     free(h); \
     return NULL; \
   } \
-  printf("here _del1\n"); \
   if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) h = move_red_left_ ## KEY ## _ ## VALUE ## _rbt(h); \
   h->left = delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(h->left, destruct); \
-  printf("here _del2\n"); \
   return balance_ ## KEY ## _ ## VALUE ## _rbt(h); \
 } \
 KEY ## _ ## VALUE ## _rbt delete_min_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
@@ -293,13 +289,23 @@ const List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALU
     recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(root->right));\
 } \
 void helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
-  while(size_ ## KEY ## _ ## VALUE ## _rbt(root)) { \
-    /* maybe this can be improved */ \
-    printf("root pointer = %p\n", root);\
-    printf("size = %d\n", size_ ## KEY ## _ ## VALUE ## _rbt(root)); \
+  /* one way to do this */ \
+  \
+  /* while(size_ ## KEY ## _ ## VALUE ## _rbt(root)) { \
+    \
     root = delete_min_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
-    printf("deleted min, size  =  %d\n", size_ ## KEY ## _ ## VALUE ## _rbt(root)); \
+  } */ \
+  \
+  /* only very slightly faster */ \
+  if (!root) return;  \
+  \
+  /* free  */ \
+  helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(root->left, destruct);\
+  helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(root->right, destruct);\
+  if (root->value_type) { \
+    destruct(root->value_type);\
   } \
+  free(root);  \
 } \
 void free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt *root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
   helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(*root, destruct); \

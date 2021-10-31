@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include <time.h>
 #include "rbt.h"
 typedef char *my_string;
 int less_string_(char *s1, char *s2) {
@@ -47,6 +48,7 @@ char *remove_punctuation(char *str) {
 }
 
 int main(int argc, char const *argv[]) {
+  clock_t start = clock(), diff;
   char *tale = "tale.txt";
   FILE *fp_tale = fopen(tale, "r");
   if (!fp_tale) {
@@ -93,5 +95,8 @@ int main(int argc, char const *argv[]) {
   printf("size = %d\n", size_my_string_int_rbt(rbt_root));
   free(tale_contents);
   fclose(fp_tale);
+  diff = clock() - start;
+  int msec = diff * 1000 / CLOCKS_PER_SEC;
+  printf("Time taken %d seconds %d milliseconds", msec/1000, msec%1000);
   return 0;
 }
