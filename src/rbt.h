@@ -37,15 +37,16 @@ List_ ## KEY ## _ ## VALUE ## _pair make_list_ ## KEY ## _ ## VALUE ## _(KEY key
   p_list->next = NULL; \
   return p_list; \
 } \
-void shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(List_ ## KEY ## _ ## VALUE ## _pair list) { \
+void shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(List_ ## KEY ## _ ## VALUE ## _pair list, void (*shallow_destruct) (KEY ## _ ## VALUE ## _pair)) { \
   /* does not destroy the list-node's copy of pair struct */ \
   /* need to rename this function (remove the _rbt from the end of function name) and add the same to bst.h */ \
   if (!list) return; \
   List_ ## KEY ## _ ## VALUE ## _pair temp_list_node = list->next; \
   /* destruct(list->entry); */ \
+  shallow_destruct(list->entry); \
   free(list); \
   list = temp_list_node; \
-  shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(list); \
+  shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(list, shallow_destruct); \
 } \
 void deep_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(List_ ## KEY ## _ ## VALUE ## _pair list, void (*destruct) (KEY ## _ ## VALUE ## _pair)) { \
   if (!list) return; \
@@ -212,12 +213,19 @@ KEY ## _ ## VALUE ## _rbt balance_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALU
  } \
 KEY ## _ ## VALUE ## _rbt delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt h, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
   if (!h->left) { \
-    destruct(h->value_type);\
+    if (h->value_type) { \
+      printf("hi in\n"); \
+      destruct(h->value_type);\
+      printf("hi out\n"); \
+    } \
+    \
     free(h); \
     return NULL; \
   } \
+  printf("here _del1\n"); \
   if (!isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left) && !isRed_ ## KEY ## _ ## VALUE ## _rbt(h->left->left)) h = move_red_left_ ## KEY ## _ ## VALUE ## _rbt(h); \
   h->left = delete_min_helper_ ## KEY ## _ ## VALUE ## _rbt(h->left, destruct); \
+  printf("here _del2\n"); \
   return balance_ ## KEY ## _ ## VALUE ## _rbt(h); \
 } \
 KEY ## _ ## VALUE ## _rbt delete_min_ ## KEY ## _ ## VALUE ## _rbt(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
@@ -285,9 +293,12 @@ const List_ ## KEY ## _ ## VALUE ## _pair recursive_inorder_ ## KEY ## _ ## VALU
     recursive_inorder_ ## KEY ## _ ## VALUE ## _rbt(root->right));\
 } \
 void helper_free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \
-  while(root) { \
+  while(size_ ## KEY ## _ ## VALUE ## _rbt(root)) { \
     /* maybe this can be improved */ \
+    printf("root pointer = %p\n", root);\
+    printf("size = %d\n", size_ ## KEY ## _ ## VALUE ## _rbt(root)); \
     root = delete_min_ ## KEY ## _ ## VALUE ## _rbt(root, destruct); \
+    printf("deleted min, size  =  %d\n", size_ ## KEY ## _ ## VALUE ## _rbt(root)); \
   } \
 } \
 void free_whole_rbt_ ## KEY ## _ ## VALUE ## _(KEY ## _ ## VALUE ## _rbt *root, void (* destruct) (KEY ## _ ## VALUE ## _pair)) { \

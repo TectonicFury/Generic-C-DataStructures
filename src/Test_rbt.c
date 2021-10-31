@@ -79,7 +79,7 @@ int main(int argc, char const *argv[]) {
   // /* testing address sanitizer in homebrew LLVM clang using
   // clang -c Test_rbt.c -Wall -g -std=c11 -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer
   // clang -o test_rbt Test_rbt.o -Wall -g -std=c11 -fsanitize=address */
-  //
+  // run with ASAN_OPTIONS=detect_leaks=1 ./test_rbt
   deep_destroy_List_int_int_rbt(list0, destruct_int_int_pair); // memory leak: list0 points to end of list because of list->next,
   // below line actually frees the memory since it uses reference to first node in list
   deep_destroy_List_int_int_rbt(list0_ref, destruct_int_int_pair); //  cleans up the list as well as the underlying pair struct
