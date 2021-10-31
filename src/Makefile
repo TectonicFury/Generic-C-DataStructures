@@ -19,4 +19,4 @@ tale_freq.o: tale_freq.c rbt.h
 	clang -c tale_freq.c $(CFLAGS)
 
 clean:
-	rm test_* *.o
+	rm test_rbt test_bst tale_freq *.o

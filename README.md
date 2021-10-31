@@ -141,3 +141,6 @@ int main(int argc, char const *argv[]) {
 ```
 ### Compiling
 `clang -o sample_rbt sample_rbt.c -std=c11`
+
+### More examples
+Read the test files for more examples. Currently BST implementation is having memory bugs.
