@@ -20,7 +20,6 @@ void destruct_my_string_int_pair(my_string_int_pair pair) {
   // basic freeing, no recursive freeing for primitive data members (here ints)
   if (pair) {
     if (pair->key) {
-      // printf("%s\n", pair->key);
       free(pair->key);
     }
     // if already freed, we don't want to double free
@@ -35,10 +34,8 @@ char *remove_punctuation(char *str) {
   unsigned long length = strlen(str);
   char* s;
   for (unsigned long i = 0; i < length; i++) {
-    // printf("str[%lu] = %c\n", i, str[i]);
     if (str[i] < 0) {
       s = remove_punctuation(str + i + 1);
-      // printf("s = %s\n", s);
       return s;
     }
     if (str[i] == ',' || str[i] == '.' || str[i] == ';' || str[i] == '!' || str[i] == ':') {
@@ -48,6 +45,7 @@ char *remove_punctuation(char *str) {
   }
   return str;
 }
+
 int main(int argc, char const *argv[]) {
   char *tale = "tale.txt";
   FILE *fp_tale = fopen(tale, "r");
@@ -66,20 +64,18 @@ int main(int argc, char const *argv[]) {
   my_string_int_pair pair;
   char *t_str;
   char *str;
-  printf("welcome1\n");
-  int j = 0;
+
   while (fscanf(fp_tale, "%[^\n ] ", tale_contents) != EOF) {
     t_str = remove_punctuation(tale_contents);
-    // its important to allocate a new str otherwise the tale_contents pointer will alone be referenced 
-    str = (char *)malloc(strlen(t_str) + 1); // i had done malloc(sizeof(strlen(t_str)) + 1), ASAN gave me heap overflow error
-    strcpy(str, t_str);
-    pair = find_in_my_string_int_rbt(rbt_root, str);
-    // printf("here2\n");
+    pair = find_in_my_string_int_rbt(rbt_root, t_str);
+
     if (!pair) {
+      // its important to allocate a new str otherwise the tale_contents pointer will alone be referenced
+      str = (char *)malloc(strlen(t_str) + 1); // i had done malloc(sizeof(strlen(t_str)) + 1), ASAN gave me heap overflow error
+      strcpy(str, t_str);
       rbt_root = insert_my_string_int_rbt(rbt_root, str, 1);
     } else {
-      // if the string str already exists, no point allocating it so free it, otherwise there's going to be a memory leak
-      free(str);
+      // if the string str already exists, no point allocating it, otherwise there's going to be a memory leak
       rbt_root = insert_my_string_int_rbt(rbt_root, pair->key, pair->value + 1);
     }
   }
