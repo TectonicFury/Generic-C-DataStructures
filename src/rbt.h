@@ -38,7 +38,7 @@ List_ ## KEY ## _ ## VALUE ## _pair make_list_ ## KEY ## _ ## VALUE ## _(KEY key
   return p_list; \
 } \
 void shallow_destroy_List_ ## KEY ## _ ## VALUE ## _rbt(List_ ## KEY ## _ ## VALUE ## _pair list, void (*shallow_destruct) (KEY ## _ ## VALUE ## _pair)) { \
-  /* does not destroy the list-node's copy of pair struct */ \
+  /* does not destroy the list-node's entry's key-value, only destroys the list and entry object */ \
   /* need to rename this function (remove the _rbt from the end of function name) and add the same to bst.h */ \
   if (!list) return; \
   List_ ## KEY ## _ ## VALUE ## _pair temp_list_node = list->next; \
