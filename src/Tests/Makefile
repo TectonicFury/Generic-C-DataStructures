@@ -33,9 +33,5 @@ prime: prime.o
 prime.o: prime.c
 	clang -c prime.c $(CFLAGS)
 
-
-
-
-
 clean:
 	rm test_rbt test_bst tale_freq seq_search test_hasht *.o
