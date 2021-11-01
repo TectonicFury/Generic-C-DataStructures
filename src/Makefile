@@ -18,5 +18,24 @@ tale_freq: tale_freq.o
 tale_freq.o: tale_freq.c rbt.h
 	clang -c tale_freq.c $(CFLAGS)
 
+seq_search: seq_search_test.o
+	clang -o seq_search seq_search_test.o $(CFLAGS1)
+seq_search_test.o: seq_search_test.c sequential_search.h
+	clang -c seq_search_test.c $(CFLAGS)
+
+test_hasht: hasht_test.o prime.o
+	clang -o test_hasht hasht_test.o prime.o $(CFLAGS1)
+hasht_test.o: hasht_test.c hash_table.h
+	clang -c hasht_test.c $(CFLAGS)
+
+prime: prime.o
+	clang -o prime prime.o $(CFLAGS1)
+prime.o: prime.c
+	clang -c prime.c $(CFLAGS)
+
+
+
+
+
 clean:
-	rm test_rbt test_bst tale_freq *.o
+	rm test_rbt test_bst tale_freq seq_search test_hasht *.o
