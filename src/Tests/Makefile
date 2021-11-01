@@ -25,7 +25,7 @@ seq_search_test.o: seq_search_test.c sequential_search.h
 
 test_hasht: hasht_test.o prime.o
 	clang -o test_hasht hasht_test.o prime.o $(CFLAGS1)
-hasht_test.o: hasht_test.c hash_table.h
+hasht_test.o: hasht_test.c
 	clang -c hasht_test.c $(CFLAGS)
 
 prime: prime.o

@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <time.h>
-#include "rbt.h"
+#include "../includes/rbt.h"
 typedef char *my_string;
 int less_string_(char *s1, char *s2) {
   if (strcmp(s1, s2) < 0) return 1;

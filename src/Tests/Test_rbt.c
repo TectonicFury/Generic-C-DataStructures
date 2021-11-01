@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 #include <assert.h>
-#include "rbt.h"
+#include "../includes/rbt.h"
 int less_int_(int a, int b) {
   if (a < b) return 1;
   return 0;

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "prime.h"
+#include "../includes/prime.h"
 unsigned long long square(unsigned long long a) {
   return a * a;
 }

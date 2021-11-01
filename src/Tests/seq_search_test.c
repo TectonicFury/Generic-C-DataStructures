@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "sequential_search.h"
+#include "../includes/sequential_search.h"
 
 int equals_int_(int a, int b) {
   if (a == b) return 1;

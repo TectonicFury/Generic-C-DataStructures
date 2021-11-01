@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "hash_table.h"
+#include "../includes/hash_table.h"
 
 
 int equals_int_(int a, int b) {

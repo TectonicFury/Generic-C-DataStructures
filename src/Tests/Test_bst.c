@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include "bst.h"
+#include "../includes/bst.h"
 // need to fix memory leaks
 typedef char *my_string; // can't paste * in macros substitutions if joining
 
