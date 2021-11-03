@@ -20,7 +20,7 @@ tale_freq.o: tale_freq.c rbt.h
 
 seq_search: seq_search_test.o
 	clang -o seq_search seq_search_test.o $(CFLAGS1)
-seq_search_test.o: seq_search_test.c sequential_search.h
+seq_search_test.o: seq_search_test.c
 	clang -c seq_search_test.c $(CFLAGS)
 
 test_hasht: hasht_test.o prime.o

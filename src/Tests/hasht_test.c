@@ -41,6 +41,8 @@ int main(int argc, char const *argv[]) {
     int_int_pairST p = find_in_int_int_hash_table(hash_table, i);
     if (p) {
       printf("key = %d, value = %d\n", p->key, p->value);
+      // delete it
+      delete_int_int_hash_table(&hash_table, p->key, destruct_int_int_pair);
     }
   }
   printf("size of hashtable = %d\n", hash_table->size);

@@ -46,7 +46,8 @@ KEY ## _ ## VALUE ## _listST delete_ ## KEY ## _ ## VALUE ## _listST(KEY ## _ ##
     free(first); \
     return temp_next; \
   } \
-  return delete_ ## KEY ## _ ## VALUE ## _listST(first->next, key, destruct); \
+  first->next = delete_ ## KEY ## _ ## VALUE ## _listST(first->next, key, destruct); \
+  return first; \
 } \
 void free_whole_ ## KEY ## _ ## VALUE ## _listST(KEY ## _ ## VALUE ## _listST first, void (*destruct) (KEY ## _ ## VALUE ## _pairST)) { \
   if (!first) return; \

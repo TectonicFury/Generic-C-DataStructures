@@ -80,6 +80,16 @@ void insert_ ## KEY ## _ ## VALUE ## _hash_table(KEY ## _ ## VALUE ## _hash_tabl
   insert_ ## KEY ## _ ## VALUE ## _hash_table_array(&((*h_table)->ht), key, value, (*h_table)->capacity); \
 } \
  \
+void delete_ ## KEY ## _ ## VALUE ## _hash_table_array(KEY ## _ ## VALUE ## _hash_table_array *ht, KEY key, int modulo, void (*destruct) (KEY ## _ ## VALUE ## _pairST)) { \
+  int index = HASH_FUNC ## _(key, modulo); \
+  (*ht)[index] = delete_ ## KEY ## _ ## VALUE ## _listST((*ht)[index], key, destruct); \
+} \
+void delete_ ## KEY ## _ ## VALUE ## _hash_table(KEY ## _ ## VALUE ## _hash_table *h_table, KEY key, void (*destruct) (KEY ## _ ## VALUE ## _pairST)) { \
+  if (find_in_ ## KEY ## _ ## VALUE ## _hash_table_array((*h_table)->ht, key, (*h_table)->capacity)) { \
+    delete_ ## KEY ## _ ## VALUE ## _hash_table_array(&((*h_table)->ht), key, (*h_table)->capacity, destruct); \
+    (*h_table)->size = (*h_table)->size - 1; \
+  } \
+} \
 void free_ ## KEY ## _ ## VALUE ## _hash_table(KEY ## _ ## VALUE ## _hash_table *h_table, void (*destruct) (KEY ## _ ## VALUE ## _pairST)) { \
   free_ ## KEY ## _ ## VALUE ## _hash_table_array(&((*h_table)->ht), destruct, (*h_table)->capacity); \
   free(*h_table); \
