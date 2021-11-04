@@ -28,10 +28,15 @@ test_hasht: hasht_test.o prime.o
 hasht_test.o: hasht_test.c
 	clang -c hasht_test.c $(CFLAGS)
 
+test_set: test_set.o
+	clang -o test_set test_set.o $(CFLAGS1)
+test_set.o: test_set.c
+	clang -c test_set.c $(CFLAGS)
+
 prime: prime.o
 	clang -o prime prime.o $(CFLAGS1)
 prime.o: prime.c
 	clang -c prime.c $(CFLAGS)
 
 clean:
-	rm test_rbt test_bst tale_freq seq_search test_hasht *.o
+	rm test_rbt test_bst tale_freq seq_search test_hasht test_set *.o

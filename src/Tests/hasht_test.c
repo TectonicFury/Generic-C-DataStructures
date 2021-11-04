@@ -38,10 +38,11 @@ int main(int argc, char const *argv[]) {
   }
 
   for (size_t i = 0; i < 20000; i++) {
+    // find i
     int_int_pairST p = find_in_int_int_hash_table(hash_table, i);
     if (p) {
       printf("key = %d, value = %d\n", p->key, p->value);
-      // delete it
+      // delete it if key 'i' exists
       delete_int_int_hash_table(&hash_table, p->key, destruct_int_int_pair);
     }
   }
