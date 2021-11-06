@@ -42,6 +42,7 @@ int main(int argc, char const *argv[]) {
     }
   }
 
+  //testing delete
   for (size_t i = 0; i < 4000; i++) {
     int_set_entry p_e = find_in_int_set(p_set, i);
     if (p_e) {
@@ -50,6 +51,8 @@ int main(int argc, char const *argv[]) {
   }
   printf("size of set = %d\n", p_set->size);
   printf("%p\n", p_set);
+
+  // testing free
   free_whole_int_set(&p_set, destruct_int_set_entry);
   return 0;
 }

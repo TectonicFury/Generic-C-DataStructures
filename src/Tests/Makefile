@@ -33,10 +33,15 @@ test_set: test_set.o
 test_set.o: test_set.c
 	clang -c test_set.c $(CFLAGS)
 
+test_graph: test_graph.o
+	clang -o test_graph test_graph.o $(CFLAGS1)
+test_graph.o: test_graph.c
+	 clang -c test_graph.c $(CFLAGS)
+
 prime: prime.o
 	clang -o prime prime.o $(CFLAGS1)
 prime.o: prime.c
 	clang -c prime.c $(CFLAGS)
 
 clean:
-	rm test_rbt test_bst tale_freq seq_search test_hasht test_set *.o
+	rm test_rbt test_bst tale_freq seq_search test_hasht test_set test_graph *.o
