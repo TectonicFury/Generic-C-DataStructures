@@ -1,10 +1,11 @@
-#include "../includes/vertex_indexed_graph.h"
+// #include "../includes/vertex_indexed_graph.h"
+#include "../includes/dfs.h"
+#include "../includes/bfs.h"
 #include <stdio.h>
 
+// memory bugs remain (leaks)
+
 int main(int argc, char const *argv[]) {
-  // Graph g = init_graph(10, 45);
-  // printf("g->size = %d\n", g->V);
-  // add_edge(g, 1, 2);
   Graph g;
   int V, E;
   int v, w;
@@ -24,6 +25,33 @@ int main(int argc, char const *argv[]) {
     printf("%d: ", i);
     for (b = g->adj[i]; b != NULL; b = b->next) {
       printf("%d ", b->v);
+    }
+    printf("\n");
+  }
+
+  // printf("here1\n");
+  dfs p_dfs = init_dfs(g, 0);
+  // printf("here2\n");
+  df_search(p_dfs, g, 0);
+  // printf("here3\n");
+
+  // for (int i = 0; i < g->V; i++) {
+  //   printf("%d is connected to 0 : %s\n", i, is_marked(p_dfs, i) > 0 ? "true" : "false");
+  // }
+  //
+  int_stack path = path_dfs(p_dfs, 3); // not necessarily the shortest (6-4-5-3)
+  if (path) {
+    for (int_stack i = pop_int_stack(&path); i != NULL; i = pop_int_stack(&path)) {
+      printf("%d-", i->val);
+    }
+    printf("\n");
+  }
+
+  bfs p_bfs = init_bfs(g, 0);
+  int_stack path_bfs_ = path_bfs(p_bfs, 3); // shortest (5-3)
+  if (path_bfs_) {
+    for (int_stack i = pop_int_stack(&path_bfs_); i != NULL; i = pop_int_stack(&path_bfs_)) {
+      printf("%d-", i->val);
     }
     printf("\n");
   }

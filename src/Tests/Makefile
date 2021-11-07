@@ -38,6 +38,16 @@ test_graph: test_graph.o
 test_graph.o: test_graph.c
 	 clang -c test_graph.c $(CFLAGS)
 
+test_stack: test_stack.o
+	clang -o test_stack test_stack.o $(CFLAGS1)
+test_stack.o: test_stack.c
+	clang -c test_stack.c $(CFLAGS)
+
+test_queue: test_queue.o
+	clang -o test_queue test_queue.o $(CFLAGS1)
+test_queue.o: test_queue.c
+	clang -c test_queue.c $(CFLAGS)
+
 prime: prime.o
 	clang -o prime prime.o $(CFLAGS1)
 prime.o: prime.c

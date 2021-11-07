@@ -1,4 +1,6 @@
 // simple graph data structure implementation to focus on graph algorithms
+#ifndef GRAPH_H
+#define GRAPH_H
 #include <stdlib.h>
 
 typedef struct Ints_Bag *Ints_Bag;
@@ -40,3 +42,4 @@ Graph init_graph(int V, int E) {
   }
   return g;
 }
+#endif
