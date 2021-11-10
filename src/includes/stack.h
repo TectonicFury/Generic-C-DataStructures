@@ -7,6 +7,7 @@ struct TYPE ## _stack { \
   TYPE val; \
   TYPE ## _stack next; \
 }; \
+/* must call below function */ \
 void init_ ## TYPE ## _stack(TYPE ## _stack *pp_stack) { \
   *pp_stack = NULL; \
 } \

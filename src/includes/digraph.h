@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #define DIGRAPH_H
 
-#ifndef STACK_H
-#include "stack.h"
-#endif
+// #ifndef STACK_H
+// #include "stack.h"
+// #endif
 
 #ifndef GRAPH_H
 typedef struct Ints_Bag *Ints_Bag;

@@ -1,9 +1,11 @@
 // need to add multiple source directed dfs
 #ifndef DIRECTED_DFS_H
 #define DIRECTED_DFS_H
+#include <stdio.h>
 
 #ifndef STACK_H
 #include "stack.h"
+STACK(int)
 #endif
 
 #ifndef DIGRAPH_H
@@ -33,7 +35,15 @@ void df_search_directed(Directed_DFS d_dg, Digraph dg, int v) {
     }
   }
 }
+void df_search_directed_multi_source(Directed_DFS d_dg, Digraph dg, int_stack *s) {
 
+  for (int_stack elem = pop_int_stack(s); elem != NULL; elem = pop_int_stack(s)) {
+    int w = elem->val;
+    if (!d_dg->marked[w]) {
+      df_search_directed(d_dg, dg, w);
+    }
+  }
+}
 int is_marked_df_directed(Directed_DFS d_dg, int v) {
   return d_dg->marked[v];
 }
