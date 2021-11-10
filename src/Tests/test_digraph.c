@@ -2,7 +2,7 @@
 #include "../includes/directed_dfs_digraph.h"
 #include "../includes/directed_cycle.h"
 #include <stdio.h>
-
+// topological sort is just a reverse post-order ordering of a DAG (maybe even a preorder will do)
 int main(int argc, char const *argv[]) {
   Digraph dg;
   int V, E;
