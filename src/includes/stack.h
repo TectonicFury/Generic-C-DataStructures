@@ -16,6 +16,7 @@ void push_ ## TYPE ## _stack(TYPE ## _stack *pp_stack, TYPE val) { \
   p_push_stack->next = *pp_stack; \
   *pp_stack = p_push_stack; \
 } \
+/* the caller has to explicitly free the popped node */ \
 TYPE ## _stack pop_ ## TYPE ## _stack(TYPE ## _stack *pp_stack) { \
   if (!(*pp_stack)) return NULL; \
   TYPE ## _stack p = *pp_stack; /* the value to be popped */ \

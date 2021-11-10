@@ -43,6 +43,11 @@ test_stack: test_stack.o
 test_stack.o: test_stack.c
 	clang -c test_stack.c $(CFLAGS)
 
+test_digraph: test_digraph.o
+	clang -o test_digraph test_digraph.o $(CFLAGS1)
+test_digraph.o: test_digraph.c
+	clang -c test_digraph.c $(CFLAGS)
+
 test_queue: test_queue.o
 	clang -o test_queue test_queue.o $(CFLAGS1)
 test_queue.o: test_queue.c

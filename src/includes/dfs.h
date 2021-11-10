@@ -1,4 +1,6 @@
 // dfs doesn't help with shortest paths. it finds any path.
+// for cycle detection, use dfs visit pattern storing the parent and if a neighbour is marked and is not parent, there is a cycle
+// symbol graph contains a hash table containing string keys paired with integer indexes, another array is maintained to get string keys for integer index, 2 pass 
 #ifndef DFS_H
 #include <stdlib.h>
 #include <stdio.h>

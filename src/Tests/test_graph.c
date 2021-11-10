@@ -1,6 +1,7 @@
 // #include "../includes/vertex_indexed_graph.h"
 #include "../includes/dfs.h"
 #include "../includes/bfs.h"
+#include "../includes/connected_components.h"
 #include <stdio.h>
 
 // memory bugs remain (leaks)
@@ -55,5 +56,9 @@ int main(int argc, char const *argv[]) {
     }
     printf("\n");
   }
+
+  CC components;
+  init_CC(&components, g);
+  printf("component count = %d\n", components->count);
   return 0;
 }

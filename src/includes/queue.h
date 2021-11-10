@@ -33,6 +33,7 @@ void push_ ## TYPE ## _queue(TYPE ## _queue p_queue, TYPE val) { \
     p_queue->last = temp->next; \
   } \
 } \
+/* the caller has to explicitly free the dequeued node */ \
 TYPE ## _node dequeue_ ## TYPE ## _queue(TYPE ## _queue p_queue) { \
   if (!p_queue->first) return NULL; \
   TYPE ## _node temp_node = p_queue->first; \
