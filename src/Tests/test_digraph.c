@@ -1,5 +1,6 @@
 #include "../includes/digraph.h"
 #include "../includes/directed_dfs_digraph.h"
+#include "../includes/directed_cycle.h"
 #include <stdio.h>
 
 int main(int argc, char const *argv[]) {
@@ -17,6 +18,7 @@ int main(int argc, char const *argv[]) {
     add_edge_digraph(dg, v, w);
   }
 
+  // testing digraph DFS
   Directed_DFS d_dg;
   init_dfs_directed(&d_dg, dg);
   df_search_directed(d_dg, dg, 6); // single source
@@ -34,7 +36,20 @@ int main(int argc, char const *argv[]) {
 
   for (int i = 0; i < dg->V; i++) {
     if (d_dg->marked[i]) {
-      printf("%d ", i);
+      printf("multi-source connected: %d \n", i);
+    }
+  }
+  printf("\n");
+
+  // testing directed cycle
+  Directed_Cycle dc;
+  init_directed_cycle(&dc, dg);
+  directed_cycle_dfs(dc, dg);
+  // if cycle is present
+  if (dc->cycle) {
+    printf("Printing Cycle\n"); // 3 -> 5 -> 4 -> 3
+    for (int_stack s_c = pop_int_stack(&(dc->cycle)); s_c != NULL; s_c = pop_int_stack(&(dc->cycle))) {
+        printf("-> %d ", s_c->val);
     }
   }
   printf("\n");

@@ -1,4 +1,4 @@
-// need to add multiple source directed dfs
+// need to add directed_BFS_digraph -- available on algs4 booksite
 #ifndef DIRECTED_DFS_H
 #define DIRECTED_DFS_H
 #include <stdio.h>
