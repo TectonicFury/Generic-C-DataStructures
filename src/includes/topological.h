@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "directed_cycle.h"
 
-
 typedef struct Toplogical_Sort * Toplogical_Sort;
 struct Toplogical_Sort {
   int_stack reverse_post_order;

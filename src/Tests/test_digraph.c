@@ -3,6 +3,7 @@
 #include "../includes/directed_cycle.h"
 #include "../includes/dfs_order.h"
 #include "../includes/topological.h"
+#include "../includes/kosaraju_sharir_scc.h"
 
 #include <stdio.h>
 // topological sort is just a reverse post-order ordering of a DAG (maybe even a preorder will do)
@@ -20,9 +21,6 @@ int main(int argc, char const *argv[]) {
     scanf("%d", &w);
     add_edge_digraph(dg, v, w);
   }
-
-  // testing reverse
-  Digraph reverse_dg = reverse_digraph(dg);
 
   // testing digraph DFS
   Directed_DFS d_dg;
@@ -89,5 +87,32 @@ int main(int argc, char const *argv[]) {
     printf("%d ", st->val);
   }
   printf("\n");
+
+
+  // testing reverse
+  Digraph reverse_dg = reverse_digraph(dg);
+
+  Dfs_Order rev_ord;
+  init_dfs_order(&rev_ord, reverse_dg);
+  printf("\nPreOrder2 >>\n");
+  for (int_node nd = dequeue_int_queue(rev_ord->pre); nd != NULL; nd = dequeue_int_queue(rev_ord->pre)) {
+    printf("%d ", nd->val);
+  }
+  printf("\n\nPostOrder2 >>\n");
+  for (int_node nd = dequeue_int_queue(rev_ord->post); nd != NULL; nd = dequeue_int_queue(rev_ord->post)) {
+    printf("%d ", nd->val);
+  }
+  printf("\n\nReverse post-order2 >>\n");
+  for (int_stack st = pop_int_stack(&rev_ord->reverse_post); st != NULL; st = pop_int_stack(&rev_ord->reverse_post)) {
+    printf("%d ", st->val);
+  }
+  printf("\n");
+
+  // kosaraju --
+  // calculate reverse PO of reverse graph
+  Kosaraju_Sharir_SCC ks_scc;
+  init_KS_SCC(&ks_scc, dg);
+  // for a DAG (no cycles), the number of strongly connected components is equal to the number of vertices
+  printf("total number of SCC = %d\n", ks_scc->count);
   return 0;
 }

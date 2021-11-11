@@ -1,5 +1,7 @@
 # Generic Data Structures in C (using macros)
-The data structures in this repository are a C port of [Sedgewick's recursive implementations](https://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf) in Java. Currently, it has support for Sequential Search symbol tables (ie. Linked Lists), unbalanced BSTs, Red-Black BSTs, Sets, and Hash Tables with Separate Chaining. To make use of a data structure, simply include the appropriate header file and initialise it by passing required arguments for types and comparison functions.
+The data structures in this repository are a C port of [Sedgewick's recursive implementations](https://www.cs.princeton.edu/~rs/talks/LLRB/LLRB.pdf) in Java. Currently, it has support for basic data structures like Sequential Search symbol tables (ie. Linked Lists), unbalanced BSTs, Red-Black BSTs, Sets, and Hash Tables with Separate Chaining. In addition to these, it also has code for processing graphs and digraphs.
+
+To make use of a data structure, simply include the appropriate header file and initialise it by passing required arguments for types and comparison functions.
 
 For working examples, check the test files. As a rough (possibly broken) example, here is what a macro initialisation for Red-Black tree having **int** as both key and value type looks like (pay attention to the naming convention for the comparison functions):
 
