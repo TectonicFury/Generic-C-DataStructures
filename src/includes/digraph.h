@@ -47,4 +47,15 @@ int num_vertex(Digraph dg) {
 int num_edges(Digraph dg) {
   return dg->E;
 }
+Digraph reverse_digraph(Digraph dg) {
+  Digraph p_dg;
+  init_digraph(&p_dg, dg->V);
+  for (int v = 0; v < dg->V; v++) {
+    for (Ints_Bag bag = dg->adj[v]; bag != NULL; bag = bag->next) {
+      int w = bag->v;
+      add_edge_digraph(p_dg, w, v);
+    }
+  }
+  return p_dg;
+}
 #endif

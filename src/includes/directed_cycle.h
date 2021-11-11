@@ -17,6 +17,8 @@ struct Directed_Cycle {
   int *on_stack;
 };
 
+void directed_cycle_dfs(Directed_Cycle dc, Digraph dg);
+
 void init_directed_cycle(Directed_Cycle *dc, Digraph dg) {
   Directed_Cycle temp_dc = malloc(sizeof(struct Directed_Cycle));
   temp_dc->marked = malloc(dg->V * sizeof(int));
@@ -32,6 +34,7 @@ void init_directed_cycle(Directed_Cycle *dc, Digraph dg) {
   init_int_stack(&st);
   temp_dc->cycle = st;
   *dc = temp_dc;
+  directed_cycle_dfs(*dc, dg);
 }
 void aux_directed_cycle_dfs(Directed_Cycle dc, Digraph dg, int v){
   dc->on_stack[v] = 1;
@@ -49,8 +52,8 @@ void aux_directed_cycle_dfs(Directed_Cycle dc, Digraph dg, int v){
       push_int_stack(&(dc->cycle), w);
       push_int_stack(&(dc->cycle), v);
     }
-    dc->on_stack[v] = 0;
   }
+  dc->on_stack[v] = 0;
 }
 void directed_cycle_dfs(Directed_Cycle dc, Digraph dg) {
   for (int v = 0; v < dg->V; v++) {
